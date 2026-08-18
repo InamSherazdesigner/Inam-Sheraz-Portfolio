@@ -39,21 +39,34 @@ const serif = Fraunces({
   display: 'swap',
 });
 
-const getSiteUrl = () => {
-  const envUrl = process.env.NEXT_PUBLIC_SITE_URL?.trim();
-  if (envUrl && envUrl.length > 0) {
-    return envUrl.startsWith('http') ? envUrl : `https://${envUrl}`;
-  }
-  if (process.env.VERCEL_URL?.trim()) {
-    return `https://${process.env.VERCEL_URL.trim()}`;
-  }
-  return 'https://inamsheraz.vercel.app';
-};
+function resolveMetadataBase(): URL {
+  const fallback = 'https://inamsheraz.vercel.app';
+  const candidates = [
+    process.env.NEXT_PUBLIC_SITE_URL,
+    process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : null,
+    fallback,
+  ];
 
-const SITE_URL = getSiteUrl();
+  for (const candidate of candidates) {
+    if (!candidate || typeof candidate !== 'string' || !candidate.trim()) continue;
+    try {
+      const formatted = candidate.trim().startsWith('http')
+        ? candidate.trim()
+        : `https://${candidate.trim()}`;
+      return new URL(formatted);
+    } catch {
+      // Continue to next candidate
+    }
+  }
+
+  return new URL(fallback);
+}
+
+const metadataBaseUrl = resolveMetadataBase();
+const SITE_URL = metadataBaseUrl.toString().replace(/\/+$/, '');
 
 export const metadata: Metadata = {
-  metadataBase: new URL(SITE_URL),
+  metadataBase: metadataBaseUrl,
   title: {
     default: 'Inam Sheraz — Graphic Designer & Illustrator',
     template: '%s — Inam Sheraz',
