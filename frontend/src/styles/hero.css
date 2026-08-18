@@ -1,0 +1,182 @@
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Pixelify+Sans:wght@600;700&family=Silkscreen:wght@400;700&display=swap');
+
+.font-pixel-heading {
+  font-family: 'Press Start 2P', 'Silkscreen', monospace;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  -webkit-font-smoothing: none;
+  -moz-osx-font-smoothing: grayscale;
+  font-smooth: never;
+  text-rendering: geometricPrecision;
+  image-rendering: pixelated;
+  text-shadow:
+    3px 3px 0px #000000,
+    -2px -2px 0px #000000,
+    2px -2px 0px #000000,
+    -2px 2px 0px #000000,
+    2px 2px 0px #000000,
+    5px 5px 0px #804a08,
+    7px 7px 0px #000000;
+}
+
+/* Floating Animations for Pixel Sprites & Windows */
+@keyframes floatSlow {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-6px) rotate(1.5deg);
+  }
+}
+
+@keyframes floatReverse {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(6px) rotate(-1.5deg);
+  }
+}
+
+/* Pure Smooth Vertical Floating for Window Boxes (No left-to-right, No rotation) */
+@keyframes boxFloatVertical {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+@keyframes boxFloatVerticalReverse {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(8px);
+  }
+}
+
+.animate-box-float {
+  animation: boxFloatVertical 4.2s ease-in-out infinite;
+}
+
+.animate-box-float-reverse {
+  animation: boxFloatVerticalReverse 4.8s ease-in-out infinite;
+}
+
+@keyframes bubbleBounce {
+  0%, 100% {
+    transform: translate(-50%, 0);
+  }
+  50% {
+    transform: translate(-50%, -6px);
+  }
+}
+
+.animate-float-slow {
+  animation: floatSlow 3.8s ease-in-out infinite;
+}
+
+.animate-float-reverse {
+  animation: floatReverse 4.4s ease-in-out infinite;
+}
+
+.animate-bubble-bounce {
+  animation: bubbleBounce 2s ease-in-out infinite;
+}
+
+@keyframes purrShake {
+  0%, 100% {
+    transform: scale(1) rotate(0deg);
+  }
+  25% {
+    transform: scale(1.08) rotate(-3deg);
+  }
+  75% {
+    transform: scale(1.08) rotate(3deg);
+  }
+}
+
+.animate-purr {
+  animation: purrShake 0.35s ease-in-out;
+}
+
+/* Sleeping Cat Breathing */
+@keyframes catSleepBreathe {
+  0%, 100% {
+    transform: scale(1, 1);
+    opacity: 0.92;
+  }
+  50% {
+    transform: scale(1.04, 1.02);
+    opacity: 1;
+  }
+}
+
+.animate-cat-sleep {
+  animation: catSleepBreathe 3.2s ease-in-out infinite;
+}
+
+/* Inam Character Eye Blink Animation */
+@keyframes eyeBlinkFade {
+  0%, 94.5%, 98%, 100% {
+    opacity: 0;
+  }
+  95%, 97.5% {
+    opacity: 1;
+  }
+}
+
+.animate-eye-blink {
+  animation: eyeBlinkFade 4.2s steps(1) infinite;
+}
+
+/* Make background behind Console transparent */
+.hero-console-wrapper,
+.hero-console-wrapper .room,
+.room {
+  background: transparent !important;
+  min-height: auto !important;
+  padding-top: 1rem !important;
+  padding-bottom: 1rem !important;
+}
+
+/* Responsive Split Layout for HeroSection */
+.hero-split-canvas {
+  width: 100%;
+  max-width: 1680px;
+  display: grid;
+  grid-template-columns: minmax(680px, 1.25fr) minmax(380px, 1fr);
+  gap: 2.5rem;
+  align-items: center;
+  box-sizing: border-box;
+}
+
+.hero-profile-viewport {
+  width: 100%;
+  overflow: visible;
+  position: relative;
+  transition: height 160ms ease;
+}
+
+@media (max-width: 1100px) {
+  .hero-split-canvas {
+    grid-template-columns: 100%;
+    gap: 2rem;
+    justify-items: center;
+    overflow: visible;
+    width: 100%;
+  }
+
+  .hero-profile-viewport {
+    width: 100%;
+    max-width: 100vw;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    overflow: visible;
+    padding: 0.5rem 12px;
+    box-sizing: border-box;
+  }
+}

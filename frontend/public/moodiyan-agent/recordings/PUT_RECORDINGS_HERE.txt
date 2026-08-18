@@ -1,0 +1,28 @@
+PUT THE NINE ORIGINAL RECORDINGS IN THIS FOLDER
+================================================
+
+Download from Drive, then rename EXACTLY as shown on the right.
+Capital letters and underscores matter. No spaces.
+
+FROM DRIVE                      RENAME TO
+--------------------------      -------------
+Am Alten Hof.m4a.mp4       -->  AAH_1.mp4     <-- the one with NO number
+Am Alten Hof 2.m4a.mp4     -->  AAH_2.mp4
+Am Alten Hof 3.m4a.mp4     -->  AAH_3.mp4
+Am Alten Hof 4.m4a.mp4     -->  AAH_4.mp4
+Am Alten Hof 5.m4a.mp4     -->  AAH_5.mp4
+Am Alten Hof 6.m4a.mp4     -->  AAH_6.mp4
+Am Alten Hof 7.m4a.mp4     -->  AAH_7.mp4
+mama recording 1.mp4       -->  MAMA_1.mp4
+mama recording 2.mp4       -->  MAMA_2.mp4
+
+When you are done this folder should contain exactly nine files
+and nothing else. You can delete this text file.
+
+
+WINDOWS WARNING
+---------------
+File Explorer hides extensions by default, so renaming can silently
+produce "AAH_1.mp4.mp4" and nothing will play.
+
+Fix first: File Explorer -> View tab -> tick "File name extensions".

@@ -1,0 +1,15 @@
+import { chromium } from 'playwright';
+const b = await chromium.launch();
+const ctx = await b.newContext({ viewport: { width: 1280, height: 900 } });
+const p = await ctx.newPage();
+const errs = [];
+p.on('pageerror', e => errs.push(e.message));
+p.on('console', m => { if (m.type() === 'error') errs.push(m.text()); });
+await p.goto('http://127.0.0.1:3000/', { waitUntil: 'networkidle' });
+await p.waitForTimeout(1500);
+await p.screenshot({ path: '.diag/console.png' });
+console.log('listbox rows:', await p.locator('[role=listbox] [role=option]').count());
+console.log('first row text:', (await p.locator('[role=option]').first().innerText()).replace(/\n/g,' | '));
+console.log('hatch visible:', await p.locator('.hatch').isVisible());
+console.log('errors:', errs.length ? errs.slice(0,3) : 'none');
+await b.close();

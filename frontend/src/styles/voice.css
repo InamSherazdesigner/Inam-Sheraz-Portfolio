@@ -1,0 +1,192 @@
+/* ==========================================================================
+   THE VOICE AGENT WIDGET.
+
+   Sits inside the thesis page, on the amber ground, so it obeys the same rules
+   as everything else there: mono for interface text, ink on amber, vermilion
+   for the one action, no second accent, no new hue.
+
+   It is interface rather than artwork, so it is built like the notes and the
+   password gate — a bordered field on the ground, not a mat.
+   ========================================================================== */
+
+.voice {
+  max-width: var(--measure);
+  margin: 2.5rem 0;
+  border: 1px solid var(--ink-38);
+  background: var(--ink-08);
+  padding: 1.25rem;
+  font-family: var(--mono);
+}
+
+.voice__head {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: var(--t-micro);
+  letter-spacing: 0.18em;
+  color: var(--accent-ink);
+  margin-bottom: 0.9rem;
+}
+
+/* A lamp, exactly like the console's — the same object idea carried through.
+   Its colour is the one piece of state the visitor reads at a glance. */
+.voice__lamp {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  flex: none;
+  background: var(--ink-38);
+}
+.voice[data-state='connecting'] .voice__lamp {
+  background: var(--accent);
+  animation: voice-pulse 1s steps(2, end) infinite;
+}
+.voice[data-state='live'] .voice__lamp {
+  background: var(--lamp);
+  box-shadow: 0 0 7px 1px var(--lamp);
+}
+.voice[data-state='error'] .voice__lamp {
+  background: var(--accent);
+}
+
+@keyframes voice-pulse {
+  0%,
+  49% {
+    opacity: 1;
+  }
+  50%,
+  100% {
+    opacity: 0.25;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .voice[data-state='connecting'] .voice__lamp {
+    animation: none;
+  }
+}
+
+.voice__label {
+  font-family: var(--serif);
+  font-size: 1.0625rem;
+  line-height: 1.6;
+  margin: 0 0 0.9rem;
+}
+
+.voice__note {
+  font-size: var(--t-small);
+  line-height: 1.6;
+  color: var(--ink-75);
+  margin: 0.9rem 0 0;
+}
+
+/* --- Controls ------------------------------------------------------------- */
+
+.voice__controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  align-items: center;
+}
+
+.voice__btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5em;
+  padding: 0.6rem 1.1rem;
+  border: 1px solid var(--accent);
+  color: var(--accent-ink);
+  font-size: var(--t-micro);
+  letter-spacing: 0.14em;
+  transition:
+    background 140ms var(--ease-out),
+    color 140ms var(--ease-out);
+}
+.voice__btn:hover:not(:disabled),
+.voice__btn:focus-visible:not(:disabled) {
+  background: var(--accent);
+  color: var(--on-accent);
+}
+.voice__btn:disabled {
+  border-color: var(--ink-38);
+  color: var(--ink-38);
+  cursor: not-allowed;
+}
+.voice__btn--stop {
+  border-color: var(--ink-38);
+  color: var(--ink-75);
+}
+.voice__btn--stop:hover,
+.voice__btn--stop:focus-visible {
+  background: var(--ink-08);
+  color: var(--ink);
+}
+
+/* --- Status --------------------------------------------------------------- */
+
+.voice__status {
+  font-size: var(--t-small);
+  letter-spacing: 0.04em;
+  line-height: 1.6;
+  margin: 0.9rem 0 0;
+  min-height: 1.4em;
+}
+.voice__status--error {
+  color: var(--accent-ink);
+}
+
+/* Who is talking. Deliberately text rather than a waveform: a waveform is
+   decoration that competes with the artwork, and this has to say one thing. */
+.voice__turn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5em;
+  font-size: var(--t-micro);
+  letter-spacing: 0.16em;
+  color: var(--ink-75);
+  margin-top: 0.6rem;
+}
+.voice__turn b {
+  color: var(--ink);
+  font-weight: 500;
+}
+
+/* --- Transcript ----------------------------------------------------------
+   Held in memory for the length of the session and nothing else. It is never
+   sent anywhere, and it disappears when the session ends. */
+
+.voice__log {
+  margin: 1rem 0 0;
+  max-height: 15rem;
+  overflow-y: auto;
+  border-top: 1px solid var(--ink-16);
+  padding-top: 0.75rem;
+}
+.voice__log li {
+  font-size: var(--t-small);
+  line-height: 1.6;
+  padding: 0.35rem 0;
+  display: grid;
+  grid-template-columns: 4.5rem 1fr;
+  gap: 0.75rem;
+}
+.voice__log li b {
+  font-size: var(--t-micro);
+  letter-spacing: 0.14em;
+  color: var(--ink-75);
+  font-weight: 400;
+  padding-top: 0.15rem;
+}
+.voice__log li[data-who='agent'] b {
+  color: var(--accent-ink);
+}
+
+/* --- Unsupported ---------------------------------------------------------
+   No microphone, an insecure origin, or a browser without getUserMedia. Say
+   so plainly and point at the screen recording, which needs none of it. */
+.voice__fallback {
+  font-size: var(--t-small);
+  line-height: 1.6;
+  color: var(--ink-75);
+  margin: 0;
+}

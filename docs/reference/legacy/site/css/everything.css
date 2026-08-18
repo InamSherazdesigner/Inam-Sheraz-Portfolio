@@ -1,0 +1,113 @@
+/* ==========================================================================
+   THE ONE-PAGE VIEW
+
+   Plain, scrolling, no device around it. It borrows the stage's blocks and
+   type so the work looks identical either way in.
+   ========================================================================== */
+
+.every {
+  background: var(--amber);
+  color: var(--ink);
+}
+
+/* The same pixel grid, so the two routes share one ground. */
+.every::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background:
+    repeating-linear-gradient(0deg,  var(--ink-08) 0 1px, transparent 1px var(--lcd-px)),
+    repeating-linear-gradient(90deg, var(--ink-08) 0 1px, transparent 1px var(--lcd-px));
+  opacity: 0.34;
+}
+
+.every__bar {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.6rem 1.1rem;
+  background: var(--bezel);
+  color: var(--amber);
+  font-size: var(--t-small);
+  letter-spacing: 0.14em;
+}
+.every__who { flex: 1; }
+
+.every__loading {
+  position: relative;
+  z-index: 1;
+  padding: 4rem 1.25rem;
+  text-align: center;
+  color: var(--ink-60);
+  font-size: var(--t-small);
+  letter-spacing: 0.14em;
+}
+
+/* --- The index ----------------------------------------------------------
+   Readable text before any scrolling. Same principle as the LCD list. */
+
+.every__index {
+  position: relative;
+  z-index: 1;
+  max-width: 62rem;
+  margin: 0 auto;
+  padding: 4rem 1.25rem 1rem;
+}
+.every__index-label {
+  font-size: var(--t-small);
+  letter-spacing: 0.24em;
+  color: var(--accent);
+  margin: 0 0 1.25rem;
+}
+.every__index ol { border-top: 1px solid var(--ink-16); }
+.every__index a {
+  display: grid;
+  grid-template-columns: 2.5rem 1fr auto;
+  gap: 1rem;
+  padding: 0.75rem 0.4rem;
+  border-bottom: 1px solid var(--ink-16);
+  color: var(--ink);
+  text-decoration: none;
+  font-size: var(--t-small);
+  letter-spacing: 0.1em;
+  transition: background 120ms var(--ease-out), color 120ms var(--ease-out);
+}
+.every__index a:hover,
+.every__index a:focus-visible {
+  background: var(--accent);
+  color: var(--amber);
+}
+.every__index a span:first-child,
+.every__index a span:last-child { opacity: 0.6; font-variant-numeric: tabular-nums; }
+.every__index a:hover span { opacity: 0.85; }
+
+/* --- Sections ------------------------------------------------------------ */
+
+.every__sec {
+  position: relative;
+  z-index: 1;
+  background: var(--ground);
+  scroll-margin-top: 3rem;
+}
+.every__sec + .every__sec { border-top: 1px solid var(--ink-16); }
+
+.every__sec .stage__doc { padding-top: 5rem; padding-bottom: 5rem; }
+
+.every__no {
+  display: block;
+  font-family: var(--mono);
+  font-size: var(--t-small);
+  letter-spacing: 0.2em;
+  color: var(--accent);
+  margin-bottom: 0.6rem;
+}
+
+@media (max-width: 640px) {
+  .every__index { padding-top: 2.5rem; }
+  .every__sec .stage__doc { padding-top: 3rem; padding-bottom: 3rem; }
+}

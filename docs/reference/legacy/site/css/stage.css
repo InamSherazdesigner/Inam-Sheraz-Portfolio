@@ -1,0 +1,382 @@
+/* ==========================================================================
+   STAGE 5 — the full view.
+
+   The screen has become the whole window. The ground is the same amber as the
+   LCD, carrying the same faint pixel grid. BUILD_SPEC §7.
+
+   The artwork never touches the amber. Every piece sits on a neutral mat with
+   a margin, the way a print sits inside a mount — so the saturated ground
+   cannot shift how the work reads. No blend mode, filter, or overlay is ever
+   applied to an artwork.
+
+   --ground is overridable per project. LIMINAL sets it near-white, because
+   black and white is that project's own stated rule.
+   ========================================================================== */
+
+.stage {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  background: var(--ground);
+  color: var(--ink);
+}
+
+/* The same pixel grid as the LCD, at the same 3px pitch. It is the one thing
+   carried across from the console, so the visitor knows they have not left. */
+.stage::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background:
+    repeating-linear-gradient(0deg,  var(--ink-08) 0 1px, transparent 1px var(--lcd-px)),
+    repeating-linear-gradient(90deg, var(--ink-08) 0 1px, transparent 1px var(--lcd-px));
+  opacity: 0.34;
+}
+
+/* --- The console bar ----------------------------------------------------
+   A slim strip of the object, pinned. Proof the device is still there. */
+
+.stage__bar {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.6rem 1.1rem;
+  background: var(--bezel);
+  color: var(--amber);
+  font-size: var(--t-small);
+  letter-spacing: 0.1em;
+}
+.stage__lamp {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--lamp);
+  box-shadow: 0 0 6px var(--lamp);
+  flex: none;
+}
+.stage__id { opacity: 0.62; }
+.stage__now {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.stage__back {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5em;
+  padding: 0.3rem 0.7rem;
+  border: 1px solid rgb(232 161 60 / 0.34);
+  color: var(--amber);
+  letter-spacing: 0.1em;
+  transition: background 140ms var(--ease-out), border-color 140ms var(--ease-out);
+}
+.stage__back:hover,
+.stage__back:focus-visible {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--amber);
+}
+
+/* --- Column -------------------------------------------------------------- */
+
+.stage__doc {
+  position: relative;
+  z-index: 1;
+  max-width: 62rem;
+  margin: 0 auto;
+  padding: 3.5rem 1.25rem 7rem;
+}
+
+.stage__eyebrow {
+  font-size: var(--t-small);
+  letter-spacing: 0.2em;
+  color: var(--accent);
+  margin: 0 0 0.9rem;
+}
+.stage__title {
+  font-family: var(--serif);
+  font-weight: 600;
+  font-size: clamp(2.1rem, 7vw, 3.9rem);
+  line-height: 1.02;
+  letter-spacing: -0.015em;
+  margin: 0 0 0.5rem;
+}
+.stage__sub {
+  font-size: var(--t-small);
+  letter-spacing: 0.12em;
+  color: var(--ink-60);
+  margin: 0 0 3rem;
+}
+
+/* --- Prose --------------------------------------------------------------- */
+
+.stage__doc p,
+.stage__doc h3,
+.stage__doc .lead,
+.stage__doc .credit,
+.stage__doc .note,
+.stage__doc .timeline { max-width: var(--measure); }
+
+/* The long PAGE prose is set in the serif, not the mono.
+
+   BUILD_SPEC §3 assigns the monospace to *interface* text and the serif to
+   headings inside project pages. Body prose is neither — and it obeys the
+   organising principle of §4 directly: pixel type on the device, properly
+   typeset type at full resolution. Every piece of furniture around it
+   (eyebrows, captions, notes, credits, timeline, the bar) stays mono.
+
+   Scoped to classless paragraphs on purpose: every classed paragraph here
+   (.lead, .credit, .stage__eyebrow, .media__note, .plates__label) carries its
+   own type, and a bare `.stage__doc p` would outrank all of them. */
+.stage__doc p:not([class]) {
+  font-family: var(--serif);
+  font-size: 1.0625rem;
+  line-height: 1.72;
+  margin: 0 0 1.35rem;
+}
+.stage__doc h3 {
+  font-family: var(--serif);
+  font-weight: 600;
+  font-size: 1.4rem;
+  line-height: 1.2;
+  margin: 3rem 0 1.1rem;
+}
+.stage__doc em { font-style: italic; }
+.stage__doc strong { font-weight: 500; }
+
+/* A line that lands. Set larger, still ink — never a second accent. */
+.lead {
+  font-family: var(--serif);
+  font-size: clamp(1.15rem, 2.4vw, 1.5rem);
+  line-height: 1.4;
+  margin: 2rem 0 2rem;
+  padding-left: 1.1rem;
+  border-left: 2px solid var(--accent);
+}
+
+.credit {
+  font-family: var(--mono);
+  font-size: var(--t-small);
+  letter-spacing: 0.06em;
+  color: var(--ink-60);
+  margin: 2rem 0 0;
+}
+
+.rule {
+  max-width: none;
+  height: 1px;
+  background: var(--ink-16);
+  border: 0;
+  margin: 4.5rem 0;
+}
+
+/* --- Notes ---------------------------------------------------------------
+   Three kinds, one treatment. They are warnings and disclosures, not
+   decoration, so they read as interface rather than as prose. */
+
+.note {
+  font-family: var(--mono);
+  font-size: var(--t-small);
+  line-height: 1.6;
+  letter-spacing: 0.02em;
+  padding: 0.9rem 1.1rem;
+  margin: 2rem 0;
+  border: 1px solid var(--ink-38);
+  background: var(--ink-08);
+}
+.note__kind {
+  display: block;
+  font-size: var(--t-micro);
+  letter-spacing: 0.18em;
+  color: var(--accent);
+  margin-bottom: 0.4rem;
+}
+.note--content { border-color: var(--accent); }
+
+.note__reveal {
+  margin-top: 0.8rem;
+  padding: 0.45rem 0.9rem;
+  border: 1px solid var(--accent);
+  color: var(--accent);
+  font-size: var(--t-micro);
+  letter-spacing: 0.14em;
+}
+.note__reveal:hover { background: var(--accent); color: var(--ground); }
+
+/* --- Artwork on mats -----------------------------------------------------
+   The mat is the only thing that touches the ground. The work sits on the mat. */
+
+.plate {
+  max-width: none;
+  margin: 2.5rem 0;
+  padding: clamp(0.75rem, 2.2vw, 1.6rem);
+  background: var(--mat);
+  box-shadow: 0 1px 0 var(--mat-edge), 0 12px 28px -18px rgb(23 18 10 / 0.55);
+}
+.plate img,
+.plate video { width: 100%; }
+
+.plate__cap {
+  font-size: var(--t-micro);
+  letter-spacing: 0.12em;
+  color: var(--ink-60);
+  margin: 0.7rem 0 0;
+}
+
+.plates {
+  max-width: none;
+  display: grid;
+  gap: clamp(0.75rem, 2vw, 1.25rem);
+  grid-template-columns: repeat(auto-fit, minmax(min(280px, 100%), 1fr));
+  margin: 2.5rem 0;
+}
+.plates .plate { margin: 0; }
+
+.plates__label {
+  font-size: var(--t-micro);
+  letter-spacing: 0.2em;
+  color: var(--ink-60);
+  margin: 2.5rem 0 -1rem;
+}
+
+/* The three tree projections. Three squares, side by side, playing together.
+   Seeing them at once is the argument — they never stack on a wide screen. */
+.triptych {
+  max-width: none;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: clamp(0.4rem, 1.4vw, 1rem);
+  margin: 2.5rem 0;
+}
+.triptych .plate { margin: 0; padding: clamp(0.35rem, 1vw, 0.7rem); }
+.triptych video { aspect-ratio: 1; object-fit: cover; }
+
+/* --- Media with sound ----------------------------------------------------
+   Nothing with audio ever autoplays. A play button the visitor presses. */
+
+.media {
+  max-width: none;
+  margin: 2.5rem 0;
+}
+.media__label {
+  font-size: var(--t-micro);
+  letter-spacing: 0.16em;
+  color: var(--ink-60);
+  margin: 0 0 0.6rem;
+}
+.media__note {
+  font-size: var(--t-small);
+  color: var(--ink-60);
+  margin: 0.7rem 0 0;
+  max-width: var(--measure);
+}
+.media audio { width: 100%; max-width: var(--measure); }
+
+/* --- The password gate ---------------------------------------------------
+   A client-side password is a deterrent, not security. The copy here says so
+   plainly and never claims otherwise. BUILD_SPEC §10. */
+
+.gate {
+  max-width: var(--measure);
+  border: 1px solid var(--ink-38);
+  padding: 1.4rem;
+  margin: 2.5rem 0;
+}
+.gate__form { display: flex; gap: 0.5rem; margin-top: 1rem; flex-wrap: wrap; }
+.gate__input {
+  flex: 1 1 12rem;
+  font: inherit;
+  font-size: var(--t-small);
+  letter-spacing: 0.1em;
+  padding: 0.55rem 0.7rem;
+  background: var(--mat);
+  color: var(--ink);
+  border: 1px solid var(--ink-38);
+}
+.gate__go {
+  padding: 0.55rem 1.1rem;
+  border: 1px solid var(--accent);
+  color: var(--accent);
+  font-size: var(--t-micro);
+  letter-spacing: 0.14em;
+}
+.gate__go:hover { background: var(--accent); color: var(--ground); }
+.gate__msg { font-size: var(--t-small); color: var(--accent); margin: 0.7rem 0 0; min-height: 1.2em; }
+
+/* Watermark sits on the mat, over the preview details only — required by
+   BUILD_SPEC §10. It is the one overlay in the build, and it never appears
+   over any other project's artwork. */
+.plate--marked { position: relative; }
+.plate--marked::after {
+  content: "DETAIL · NOT FOR CIRCULATION";
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  font-size: var(--t-micro);
+  letter-spacing: 0.24em;
+  color: rgb(23 18 10 / 0.30);
+  rotate: -24deg;
+  pointer-events: none;
+}
+
+/* --- Timeline ------------------------------------------------------------ */
+
+.timeline { margin: 2.5rem 0; }
+.timeline li {
+  display: grid;
+  grid-template-columns: 7.5rem 1fr;
+  gap: 1rem;
+  padding: 0.7rem 0;
+  border-top: 1px solid var(--ink-16);
+  font-size: var(--t-small);
+  line-height: 1.5;
+}
+.timeline b { font-weight: 500; letter-spacing: 0.06em; }
+
+/* --- Contact ------------------------------------------------------------- */
+
+.contact { margin: 2.5rem 0; max-width: var(--measure); }
+.contact li {
+  display: grid;
+  grid-template-columns: 8rem 1fr;
+  gap: 1rem;
+  padding: 0.8rem 0;
+  border-top: 1px solid var(--ink-16);
+  font-size: var(--t-small);
+  letter-spacing: 0.06em;
+}
+/* Unfilled details are loudly unfilled, so they cannot ship unnoticed. */
+.contact__tbd { color: var(--accent); }
+
+/* --- Resolution gain -----------------------------------------------------
+   The one motion idea in the build: entering a project gains resolution, in
+   steps, never a fade. Rendering a small image scaled up with nearest-
+   neighbour gives real pixellation rather than a blur standing in for it. */
+
+.res { animation: res-gain var(--dur-res) var(--ease-step) both; }
+
+@keyframes res-gain {
+  0%   { filter: contrast(1.6) brightness(1.08); scale: 1.012; opacity: 0.55; }
+  100% { filter: none; scale: 1; opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .res { animation: none; }
+}
+
+/* --- Phone --------------------------------------------------------------- */
+
+@media (max-width: 640px) {
+  .stage__doc { padding: 2.25rem 1rem 5rem; }
+  .timeline li,
+  .contact li { grid-template-columns: 1fr; gap: 0.15rem; }
+  /* The triptych still holds its row — three-up is the point of it. */
+  .triptych { gap: 0.3rem; }
+}

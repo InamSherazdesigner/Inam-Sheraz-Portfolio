@@ -1,0 +1,137 @@
+/* ==========================================================================
+   TOKENS — Inam Sheraz portfolio
+   Palette is locked by BUILD_SPEC.md §3. Do not introduce new colours.
+   One accent only.
+   ========================================================================== */
+
+:root {
+  /* --- The locked palette ------------------------------------------------ */
+  --room:    #0B0B0C;   /* page ground, around the console */
+  --body-1:  #2A2B2E;   /* console shell, light edge */
+  --body-2:  #1C1D20;   /* console shell */
+  --body-3:  #121315;   /* console shell, shadow edge */
+  --bezel:   #0A0A0B;   /* screen surround */
+  --amber:   #E8A13C;   /* THE LCD FIELD — the screen is amber */
+  --ink:     #17120A;   /* pixels and type ON the amber screen */
+  --accent:  #C7401F;   /* vermilion — selection, action, links */
+  --lamp:    #4FA06B;   /* power LED only */
+
+  /* --- Derived, not new colours ------------------------------------------
+     Every value below is one of the nine above at an alpha, so the palette
+     stays closed. Nothing here introduces a tenth hue.                     */
+  --ink-60:      rgb(23 18 10 / 0.60);
+  --ink-38:      rgb(23 18 10 / 0.38);
+  --ink-16:      rgb(23 18 10 / 0.16);
+  --ink-08:      rgb(23 18 10 / 0.08);
+  --amber-lift:  rgb(255 255 255 / 0.16);  /* LCD glass highlight */
+  --shell-lift:  rgb(255 255 255 / 0.05);  /* moulded plastic edge */
+  --shell-cut:   rgb(0 0 0 / 0.55);        /* moulded plastic shadow */
+
+  /* The mat the artwork sits on in the full view. Neutral by design: the
+     amber ground never touches the work. See BUILD_SPEC §7 + build decision. */
+  --mat:     #F2EBDD;
+  --mat-edge: rgb(23 18 10 / 0.14);
+
+  /* Per-project ground. Overridden on [data-ground] — LIMINAL goes near-white
+     because its own stated rule is black and white. */
+  --ground:  var(--amber);
+
+  /* --- Type -------------------------------------------------------------- */
+  --mono:  "DM Mono", ui-monospace, "SF Mono", "Cascadia Mono", "Roboto Mono",
+           Menlo, Consolas, monospace;
+  --serif: "Fraunces", "Iowan Old Style", "Palatino Linotype", Palatino,
+           Georgia, serif;
+
+  /* Interface scale. Small and dense — this is a device, not a document. */
+  --t-micro: 0.5625rem;  /*  9px — LCD footer hints, counters */
+  --t-lcd:   0.625rem;   /* 10px — LCD list rows, card body */
+  --t-small: 0.75rem;    /* 12px — console furniture, captions */
+  --t-base:  0.9375rem;  /* 15px — full-view body */
+  --t-lede:  1.125rem;   /* 18px — full-view opening line */
+
+  /* Reading measure for the long PAGE copy. */
+  --measure: 34rem;
+
+  /* --- The object -------------------------------------------------------- */
+  --console-w:  340px;   /* locked by BUILD_SPEC §12 */
+  --bezel-w:    287px;
+  --bezel-h:    252px;
+  --lcd-w:      204px;
+  --lcd-h:      197px;
+  --lcd-px:     3px;     /* one LCD "pixel" — drives the grid texture */
+
+  /* --- Motion -----------------------------------------------------------
+     One axis only: low resolution -> full resolution. Nothing contradicts it. */
+  --ease-step: steps(4, end);          /* resolution gains happen in steps */
+  --ease-out:  cubic-bezier(.22,.61,.36,1);
+  --dur-tick:  90ms;    /* a single list move */
+  --dur-load:  1400ms;  /* the tetris fill, full ceremony */
+  --dur-clear: 220ms;   /* the line-clear flash */
+  --dur-res:   520ms;   /* chunky -> sharp */
+}
+
+/* Reduced motion cuts instantly, with no animation. BUILD_SPEC §7. */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --dur-tick: 0ms;
+    --dur-load: 0ms;
+    --dur-clear: 0ms;
+    --dur-res: 0ms;
+  }
+}
+
+/* ==========================================================================
+   RESET
+   ========================================================================== */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  background: var(--room);
+  color: var(--amber);
+  font-family: var(--mono);
+  font-size: var(--t-base);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+img, video { display: block; max-width: 100%; height: auto; }
+
+/* [hidden] must win over any author `display`. Without this, a grid or flex
+   container stays visible while marked hidden — which would have shown the
+   images behind the Khushi Ya Majboori content note, and the CAT set behind
+   its password, to everyone. */
+[hidden] { display: none !important; }
+
+button {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+}
+
+ul, ol { list-style: none; margin: 0; padding: 0; }
+
+a { color: var(--accent); }
+
+/* Visible keyboard focus everywhere. Never removed, only restyled. */
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* Available to screen readers, invisible on screen. */
+.sr-only {
+  position: absolute;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}

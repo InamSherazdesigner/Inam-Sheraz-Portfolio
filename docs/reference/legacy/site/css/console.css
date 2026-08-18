@@ -1,0 +1,323 @@
+/* ==========================================================================
+   THE CONSOLE — a physical object, drawn in CSS.
+
+   Matches sprites/00-console-locked-reference.png. The form is locked:
+   charcoal brick-game body, amber LCD, D-pad left, A and B right, START,
+   and a small always-lit power LED.
+
+   One deviation, decided during the build: the reference art shows a POWER
+   button next to START, but BUILD_SPEC §5 states there is no power button and
+   the LED is a lamp only. The spec wins — START boots and shuts down.
+   ========================================================================== */
+
+/* --- The room the object sits in ----------------------------------------- */
+
+.room {
+  min-height: 100svh;
+  display: grid;
+  grid-template-rows: 1fr auto;
+  justify-items: center;
+  align-items: center;      /* without this the console stretches to the row */
+  align-content: center;
+  gap: 1.75rem;
+  padding: 2.5rem 1.25rem 3rem;
+  /* A single soft pool of light behind the console, so the object reads as
+     sitting on a surface rather than floating on a flat field. */
+  background:
+    radial-gradient(58% 42% at 50% 38%, rgb(255 255 255 / 0.035), transparent 70%),
+    var(--room);
+}
+
+/* --- Body ---------------------------------------------------------------- */
+
+.console {
+  position: relative;
+  width: var(--console-w);
+  max-width: 100%;
+  padding: 0 0 1.5rem;
+  border-radius: 14px 14px 14px 46px;   /* asymmetric foot, as in the reference */
+  background: linear-gradient(158deg, var(--body-1) 0%, var(--body-2) 46%, var(--body-3) 100%);
+  box-shadow:
+    inset 0 1px 0 var(--shell-lift),
+    inset -1px 0 0 var(--shell-cut),
+    inset 0 -2px 3px var(--shell-cut),
+    0 26px 50px -12px rgb(0 0 0 / 0.85),
+    0 2px 6px rgb(0 0 0 / 0.6);
+}
+
+/* The raised lip along the top edge, with its moulded slot. */
+.console__lip {
+  height: 26px;
+  margin: 0 12px;
+  border-radius: 0 0 8px 8px;
+  background: linear-gradient(180deg, var(--body-1), var(--body-3));
+  box-shadow: inset 0 -1px 0 var(--shell-cut);
+  display: grid;
+  place-items: center;
+}
+.console__lip::after {
+  content: "";
+  width: 74px;
+  height: 5px;
+  border-radius: 3px;
+  background: var(--bezel);
+  box-shadow: inset 0 1px 2px rgb(0 0 0 / 0.9), 0 1px 0 var(--shell-lift);
+}
+
+/* --- Screen surround ----------------------------------------------------- */
+
+.console__bezel {
+  position: relative;
+  width: var(--bezel-w);
+  height: var(--bezel-h);
+  margin: 14px auto 0;
+  border-radius: 10px 10px 30px 10px;   /* the sweep sits bottom-right */
+  background: var(--bezel);
+  box-shadow:
+    inset 0 2px 5px rgb(0 0 0 / 0.9),
+    0 1px 0 var(--shell-lift);
+  display: grid;
+  place-items: center;
+}
+
+/* The lamp. Always lit. There is no power button. */
+.console__lamp {
+  position: absolute;
+  left: 15px;
+  top: 58px;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--lamp);
+  box-shadow: 0 0 7px 1px var(--lamp), inset 0 0 2px rgb(255 255 255 / 0.6);
+}
+.console__lamp-label {
+  position: absolute;
+  left: 6px;
+  top: 70px;
+  font-size: 6px;
+  letter-spacing: 0.09em;
+  color: rgb(255 255 255 / 0.42);
+}
+
+/* --- The LCD ------------------------------------------------------------- */
+
+.lcd {
+  position: relative;
+  width: var(--lcd-w);
+  height: var(--lcd-h);
+  overflow: hidden;
+  background: var(--amber);
+  color: var(--ink);
+  font-size: var(--t-lcd);
+  line-height: 1.45;
+  box-shadow: inset 0 0 0 1px rgb(0 0 0 / 0.35);
+}
+
+/* The pixel grid. Dark pixels on an amber field — the field is never black. */
+.lcd::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 3;
+  background:
+    repeating-linear-gradient(0deg,  var(--ink-08) 0 1px, transparent 1px var(--lcd-px)),
+    repeating-linear-gradient(90deg, var(--ink-08) 0 1px, transparent 1px var(--lcd-px));
+  opacity: 0.55;
+}
+
+/* Glass. One diagonal highlight, low opacity — it must never fight the type. */
+.lcd::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 4;
+  background: linear-gradient(122deg, var(--amber-lift) 0 28%, transparent 46%);
+}
+
+/* --- Controls ------------------------------------------------------------ */
+
+/* Proportions taken off the locked reference: the control field is roughly
+   half the height of the body again below the bezel, and the controls sit in
+   its upper third with the body carrying on beneath them. */
+.console__controls {
+  position: relative;
+  height: 258px;
+  margin-top: 18px;
+}
+
+/* D-pad, left. */
+.dpad {
+  position: absolute;
+  left: 34px;
+  top: 57px;
+  width: 82px;
+  height: 82px;
+}
+.dpad__plate {
+  position: absolute;
+  inset: 0;
+  clip-path: polygon(34% 0, 66% 0, 66% 34%, 100% 34%, 100% 66%, 66% 66%,
+                     66% 100%, 34% 100%, 34% 66%, 0 66%, 0 34%, 34% 34%);
+  background: linear-gradient(150deg, var(--body-1), var(--body-3));
+  box-shadow: inset 0 1px 0 var(--shell-lift);
+  filter: drop-shadow(0 2px 3px rgb(0 0 0 / 0.7));
+}
+/* The dished centre. */
+.dpad__hub {
+  position: absolute;
+  left: 50%; top: 50%;
+  translate: -50% -50%;
+  width: 20px; height: 20px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 40% 35%, var(--body-3), #0d0e10);
+  box-shadow: inset 0 1px 2px rgb(0 0 0 / 0.9);
+}
+
+/* Each arm is a button. Real targets, not decoration. */
+.dpad__key {
+  position: absolute;
+  width: 28px;
+  height: 28px;
+  border-radius: 4px;
+}
+.dpad__key[data-key="up"]    { left: 27px; top: 0; }
+.dpad__key[data-key="down"]  { left: 27px; bottom: 0; }
+.dpad__key[data-key="left"]  { left: 0;  top: 27px; }
+.dpad__key[data-key="right"] { right: 0; top: 27px; }
+
+/* The moulded arrow on each arm. */
+.dpad__key::after {
+  content: "";
+  position: absolute;
+  left: 50%; top: 50%;
+  translate: -50% -50%;
+  border: 5px solid transparent;
+  opacity: 0.5;
+}
+.dpad__key[data-key="up"]::after    { border-bottom-color: #000; translate: -50% -70%; }
+.dpad__key[data-key="down"]::after  { border-top-color: #000;    translate: -50% -30%; }
+.dpad__key[data-key="left"]::after  { border-right-color: #000;  translate: -70% -50%; }
+.dpad__key[data-key="right"]::after { border-left-color: #000;   translate: -30% -50%; }
+
+/* A and B, right. Set on the diagonal, as in the reference. */
+.face {
+  position: absolute;
+  right: 26px;
+  top: 50px;
+  width: 108px;
+  height: 96px;
+}
+.face__btn {
+  position: absolute;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 36% 30%, #e2553a, var(--accent) 62%, #8f2c14);
+  box-shadow:
+    inset 0 -2px 3px rgb(0 0 0 / 0.45),
+    inset 0 2px 2px rgb(255 255 255 / 0.25),
+    0 3px 5px rgb(0 0 0 / 0.7);
+}
+.face__btn[data-key="a"] { right: 4px;  top: 8px; }
+.face__btn[data-key="b"] { right: 52px; top: 36px; }
+
+.face__label {
+  position: absolute;
+  font-size: 8px;
+  letter-spacing: 0.1em;
+  color: rgb(255 255 255 / 0.5);
+}
+.face__label[data-for="a"] { right: 14px; top: 50px; }
+.face__label[data-for="b"] { right: 64px; top: 78px; }
+
+/* START, centre. Boots and shuts the console down. With no POWER button
+   beside it, it takes the centre line on its own. */
+.start {
+  position: absolute;
+  left: 50%;
+  top: 24px;
+  translate: -50% 0;
+  display: grid;
+  justify-items: center;
+  gap: 4px;
+}
+.start__btn {
+  width: 21px;
+  height: 21px;
+  border-radius: 50%;
+  background: linear-gradient(160deg, var(--body-1), #0f1012);
+  box-shadow:
+    inset 0 1px 1px var(--shell-lift),
+    inset 0 -1px 2px rgb(0 0 0 / 0.8),
+    0 2px 3px rgb(0 0 0 / 0.6);
+}
+.start__label {
+  font-size: 7px;
+  letter-spacing: 0.12em;
+  color: rgb(255 255 255 / 0.45);
+}
+
+/* --- Press feedback ------------------------------------------------------
+   Every control depresses. The object has to feel operated, not clicked. */
+
+.dpad__key:active,
+.dpad__key[data-held="true"] { translate: 0 1px; }
+
+.face__btn:active,
+.face__btn[data-held="true"] {
+  translate: 0 2px;
+  box-shadow: inset 0 -1px 2px rgb(0 0 0 / 0.5), 0 1px 2px rgb(0 0 0 / 0.7);
+}
+
+.start__btn:active,
+.start__btn[data-held="true"] {
+  translate: 0 1px;
+  box-shadow: inset 0 1px 3px rgb(0 0 0 / 0.9);
+}
+
+/* --- The escape hatch ----------------------------------------------------
+   Always visible, outside the console, reachable without learning any
+   control. BUILD_SPEC §5 — this is not optional. */
+
+.hatch {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55em;
+  font-size: var(--t-small);
+  letter-spacing: 0.14em;
+  color: var(--amber);
+  text-decoration: none;
+  padding: 0.6rem 0.2rem;
+  border-bottom: 1px solid var(--ink-38);
+  transition: color 140ms var(--ease-out), border-color 140ms var(--ease-out);
+}
+.hatch:hover,
+.hatch:focus-visible {
+  color: var(--accent);
+  border-bottom-color: var(--accent);
+}
+.hatch__arrow { transition: translate 140ms var(--ease-out); }
+.hatch:hover .hatch__arrow { translate: 3px 0; }
+
+/* --- Small screens -------------------------------------------------------
+   Most people will open this on a phone. The console scales as one object
+   rather than reflowing, so the device never breaks apart. */
+
+@media (max-width: 380px) {
+  :root { --console-w: 300px; --bezel-w: 253px; --bezel-h: 222px;
+          --lcd-w: 180px; --lcd-h: 174px; }
+  .console__controls { height: 228px; }
+  .dpad  { left: 22px; width: 74px; height: 74px; }
+  .dpad__key { width: 25px; height: 25px; }
+  .dpad__key[data-key="up"], .dpad__key[data-key="down"]   { left: 24px; }
+  .dpad__key[data-key="left"], .dpad__key[data-key="right"]{ top: 24px; }
+  .face  { right: 18px; }
+}
+
+/* Short viewports: the console must not get cut off. */
+@media (max-height: 700px) {
+  .room { align-content: start; padding-top: 1.25rem; }
+}

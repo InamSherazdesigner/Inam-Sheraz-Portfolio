@@ -1,0 +1,189 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+# A new push supersedes an in-flight run on the same branch.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  NODE_VERSION: '22'
+
+jobs:
+  # ---------------------------------------------------------------------------
+  # Fast gates. Everything that fails in seconds runs before anything slow.
+  # ---------------------------------------------------------------------------
+  quality:
+    name: Format · Lint · Types
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+      - run: npm ci
+      - run: npm run format
+      - run: npm run lint
+      - run: npm run typecheck
+
+  # ---------------------------------------------------------------------------
+  # Unit and integration. A real MongoDB, so the paths that need one are
+  # actually exercised rather than skipped.
+  # ---------------------------------------------------------------------------
+  test:
+    name: Tests
+    runs-on: ubuntu-latest
+    services:
+      mongodb:
+        image: mongo:7
+        ports: ['27017:27017']
+        options: >-
+          --health-cmd "mongosh --quiet --eval 'db.runCommand({ping:1})'"
+          --health-interval 10s --health-timeout 5s --health-retries 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+      - run: npm ci
+      - run: npm run test --workspace @portfolio/backend
+      - run: npm run test --workspace @portfolio/frontend
+      - name: Coverage
+        run: npm run test:coverage --workspace @portfolio/backend
+
+  # ---------------------------------------------------------------------------
+  # E2E against a PRODUCTION build. This is where the CSP that broke hydration
+  # was caught — nothing cheaper would have found it, because the failure only
+  # exists in a real browser enforcing real headers.
+  # ---------------------------------------------------------------------------
+  e2e:
+    name: E2E + Accessibility
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+        working-directory: frontend
+      - run: npm run build --workspace @portfolio/frontend
+      - run: npm run test:e2e --workspace @portfolio/frontend
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: playwright-report
+          path: frontend/playwright-report/
+          retention-days: 14
+
+  # ---------------------------------------------------------------------------
+  # Supply chain. Fails the build on a high-severity advisory in either tree.
+  # ---------------------------------------------------------------------------
+  security:
+    name: Dependencies · Secrets
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # gitleaks needs history to scan past commits, not just the tip.
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+      - run: npm ci
+
+      - name: Audit production dependencies
+        run: npm audit --omit=dev --audit-level=high
+
+      - name: Audit all dependencies
+        run: npm audit --audit-level=high
+        continue-on-error: true # dev-only advisories inform, they do not block
+
+      - name: Secret scan
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      # Belt and braces on the one thing that must never regress. A committed
+      # ElevenLabs key would be a SEV1, so it is checked explicitly rather than
+      # left to a generic scanner's ruleset.
+      - name: No credential may reach the frontend
+        run: |
+          if grep -rIn --include='*.ts' --include='*.tsx' --include='*.js' \
+               -E 'xi-api-key|sk_[a-zA-Z0-9]{20,}|ELEVENLABS_API_KEY' frontend/src; then
+            echo "::error::A credential reference was found in frontend source."
+            exit 1
+          fi
+          echo "clean"
+
+  # ---------------------------------------------------------------------------
+  # Container build, and a check that it actually starts.
+  # ---------------------------------------------------------------------------
+  image:
+    name: Backend image
+    runs-on: ubuntu-latest
+    needs: [quality, test]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: docker/setup-buildx-action@v3
+      - uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: backend/Dockerfile
+          push: false
+          load: true
+          tags: portfolio-api:ci
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: It boots and reports live
+        run: |
+          docker run -d --name api -p 4000:4000 \
+            -e NODE_ENV=production \
+            -e MONGODB_URI=mongodb://127.0.0.1:27017/ci \
+            -e CORS_ORIGINS=http://localhost:3000 \
+            -e VOICE_PROVIDER=elevenlabs \
+            -e ELEVENLABS_API_KEY=ci-placeholder \
+            -e ELEVENLABS_AGENT_ID=ci-placeholder \
+            portfolio-api:ci
+          for i in $(seq 1 20); do
+            if curl -sf http://localhost:4000/health/live; then echo; exit 0; fi
+            sleep 2
+          done
+          echo "::error::container did not become live"
+          docker logs api
+          exit 1
+
+      - name: Trivy image scan
+        uses: aquasecurity/trivy-action@0.28.0
+        with:
+          image-ref: portfolio-api:ci
+          severity: HIGH,CRITICAL
+          exit-code: '1'
+          ignore-unfixed: true
+
+  # ---------------------------------------------------------------------------
+  # The gate. Branch protection points at this one job.
+  # ---------------------------------------------------------------------------
+  ready:
+    name: Release readiness
+    runs-on: ubuntu-latest
+    needs: [quality, test, e2e, security, image]
+    if: always()
+    steps:
+      - name: All gates green
+        run: |
+          if [ "${{ contains(needs.*.result, 'failure') }}" = "true" ]; then
+            echo "::error::one or more gates failed"
+            exit 1
+          fi
+          echo "All gates passed."

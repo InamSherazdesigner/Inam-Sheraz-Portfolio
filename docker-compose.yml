@@ -1,0 +1,67 @@
+# =============================================================================
+# LOCAL STACK — the whole thing in one command.
+#
+#   cp backend/.env.example backend/.env     # add your ElevenLabs values
+#   docker compose up --build
+#
+#   frontend  http://localhost:3000
+#   backend   http://localhost:4000/health/ready
+#
+# This is a development convenience, not the production topology. The runbook
+# describes that: static frontend on a CDN, one backend instance, managed Mongo.
+# =============================================================================
+
+services:
+  mongodb:
+    image: mongo:7
+    restart: unless-stopped
+    ports:
+      - '27017:27017'
+    volumes:
+      - mongo-data:/data/db
+    healthcheck:
+      test: ['CMD', 'mongosh', '--quiet', '--eval', "db.runCommand({ping:1})"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+
+  api:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    restart: unless-stopped
+    ports:
+      - '4000:4000'
+    environment:
+      NODE_ENV: production
+      PORT: 4000
+      MONGODB_URI: mongodb://mongodb:27017/inam-portfolio
+      CORS_ORIGINS: http://localhost:3000
+      LOG_LEVEL: info
+      # Read from your shell or backend/.env. Never hard-coded here — this file
+      # is committed and that one is not.
+      VOICE_PROVIDER: ${VOICE_PROVIDER:-elevenlabs}
+      ELEVENLABS_API_KEY: ${ELEVENLABS_API_KEY:?set ELEVENLABS_API_KEY, or use VOICE_PROVIDER=mock}
+      ELEVENLABS_AGENT_ID: ${ELEVENLABS_AGENT_ID:?set ELEVENLABS_AGENT_ID, or use VOICE_PROVIDER=mock}
+      CAT_GATE_PASSWORD: ${CAT_GATE_PASSWORD:-apperception}
+    depends_on:
+      mongodb:
+        condition: service_healthy
+
+  web:
+    build:
+      context: .
+      dockerfile: frontend/Dockerfile
+      args:
+        # Baked in at build time — NEXT_PUBLIC_* is not read at runtime.
+        NEXT_PUBLIC_API_URL: http://localhost:4000
+        NEXT_PUBLIC_SITE_URL: http://localhost:3000
+    restart: unless-stopped
+    ports:
+      - '3000:3000'
+    depends_on:
+      - api
+
+volumes:
+  mongo-data:

@@ -1,0 +1,52 @@
+# --- Dependencies ---------------------------------------------------------
+node_modules/
+.pnp
+.pnp.js
+
+# --- Build output ---------------------------------------------------------
+.next/
+out/
+dist/
+build/
+*.tsbuildinfo
+next-env.d.ts
+
+# --- Environment ----------------------------------------------------------
+# Secrets never enter the repository. Only .env.example is tracked.
+.env
+.env.*
+!.env.example
+
+# --- Test + coverage ------------------------------------------------------
+coverage/
+.nyc_output/
+playwright-report/
+test-results/
+blob-report/
+.playwright/
+
+# --- Logs -----------------------------------------------------------------
+logs/
+*.log
+npm-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# --- Editors and OS -------------------------------------------------------
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+
+# --- Working archive ------------------------------------------------------
+# asset-library/ holds the 1.4 GB of raw PSD/AI/PDF/PNG exports the website
+# does not serve. It is kept beside the project so future work can reach it,
+# but it must never enter git or a deployment bundle. See docs/adr/0005.
+asset-library/
+
+# --- Caches ---------------------------------------------------------------
+.turbo/
+.eslintcache
+.cache/

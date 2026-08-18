@@ -1,0 +1,228 @@
+{
+  "_comment": "Moodiyan Ton Agge — playback config. Offsets in seconds. Nothing is cut; the player seeks to start and stops at end. Agent speaks as Inam (v2.0), so all follow_up lines are the son narrating, never a parent's first person.",
+
+  "files": {
+    "AAH_1": { "name": "Am Alten Hof.m4a.mp4",   "drive_id": "1KriZFTYf26ktr2shdtI8744s3r8MCX20", "speaker": "father" },
+    "AAH_2": { "name": "Am Alten Hof 2.m4a.mp4", "drive_id": "1epUnvDm1XoDoChTk12SawN-UkZvbp5yp", "speaker": "father" },
+    "AAH_3": { "name": "Am Alten Hof 3.m4a.mp4", "drive_id": "1y2Vsfc7Yhx2WvpBxX6hgIA5xKHWAYXau", "speaker": "father" },
+    "AAH_4": { "name": "Am Alten Hof 4.m4a.mp4", "drive_id": "1Nt0Nb5sPA3ilIafC4l4yITcbNH4WSPFv", "speaker": "father" },
+    "AAH_5": { "name": "Am Alten Hof 5.m4a.mp4", "drive_id": "1MmiZjtKET0rZzdoDGdWNqmq0htmz_Y-F", "speaker": "father" },
+    "AAH_6": { "name": "Am Alten Hof 6.m4a.mp4", "drive_id": "1Z9c5K01zskXLFKrcjegcgv9RHaKlZyj3", "speaker": "father" },
+    "AAH_7": { "name": "Am Alten Hof 7.m4a.mp4", "drive_id": "1jQtxgU5f1Ye2F1wPoY-TuNyXySgSsC0a", "speaker": "father" },
+    "MAMA_1": { "name": "mama recording 1.mp4",  "drive_id": "1lUTXA3XEqTtqJ9oX8ed7GZp_9KBX0k2s", "speaker": "mother" },
+    "MAMA_2": { "name": "mama recording 2.mp4",  "drive_id": "1pI5RVm87SV0LgiF-VLTfLvs7BHDbSTMR", "speaker": "mother" }
+  },
+
+  "speakers": {
+    "father": { "label_ur": "Inam ke walid", "label_en": "Inam's father" },
+    "mother": { "label_ur": "Inam ki walida", "label_en": "Inam's mother" }
+  },
+
+  "clips": {
+
+    "father_why_he_left": {
+      "file": "AAH_1", "start": 35, "end": 110, "duration": 75,
+      "title": "Yeh faisla kyun kiya",
+      "diary": "Ch1 P4",
+      "follow_up": "Woh Ammi ko chhoti chhoti khwahishon par samjhauta karte dekhte thay. Diary mein aik page hai jahan Ammi ka haath kisi mamooli si cheez ke qareeb ruk kar wapas aa jata hai — woh page isi baat se aaya hai."
+    },
+
+    "father_mard_ki_jeb": {
+      "file": "AAH_1", "start": 67, "end": 94, "duration": 27,
+      "title": "Mard ki jeb",
+      "diary": "Ch4 P1",
+      "follow_up": "Yeh jumla mere liye sab se bhaari hai — ke hum kisi ke samne ro nahi sakte kyun ke humein bachpan se yahi bataya jata hai. Meri poori diary mein kisi ka chehra saaf nazar nahi aata. Mujhe baad mein samajh aaya ke wajah yeh thi."
+    },
+
+    "father_visa_decision": {
+      "file": "AAH_1", "start": 136, "end": 155, "duration": 19,
+      "title": "Aap log chale jayein",
+      "diary": "Ch1 P7",
+      "follow_up": "Unke paas sirf das din ka visa tha. Yeh unhon ne apne walid se kaha tha — aur phir woh wapas chale gaye."
+    },
+
+    "father_early_struggle": {
+      "file": "AAH_1", "start": 247, "end": 319, "duration": 72,
+      "title": "Yahan se tumhara safar akela hai",
+      "diary": "Ch3 P2, P3, P4",
+      "follow_up": "Camp ko unhon ne khulli jail kaha. Subah shaam hazri, bahar jane ke liye sign. Diary ka woh poora hissa isi recording se bana."
+    },
+
+    "father_exploitation": {
+      "file": "AAH_1", "start": 387, "end": 422, "duration": 35,
+      "title": "Card se phone, barah ghantay kaam",
+      "diary": "Ch3 P5, P6, P7",
+      "follow_up": "Us waqt na internet tha na smartphone. Ghar baat karne ke liye card khareedna parta tha — aur aksar card ke paise bhi nahi hotay thay."
+    },
+
+    "father_halal_earning": {
+      "file": "AAH_2", "start": 16, "end": 44, "duration": 28,
+      "title": "Mehnat mein sharam nahi",
+      "diary": "Ch2 P2",
+      "follow_up": "Akhbarein, rang, safai, gaariyan. Diary mein aik page hai jis par sirf haath aur baazu nazar aate hain, poora insaan nahi — kaam nazar aata hai, karne wala nahi."
+    },
+
+    "father_packet_refusal": {
+      "file": "AAH_2", "start": 57, "end": 141, "duration": 84,
+      "title": "Aik hazaar euro ka packet — poori baat",
+      "diary": "Ch4 P2–P5",
+      "follow_up": "Unhon ne poocha tha ke packet mein kya hai. Us ka jawab recording mein saaf nahi hai, is liye main andaza nahi lagaunga — aaj tak kisi ko nahi pata ke us mein kya tha."
+    },
+
+    "father_packet_short": {
+      "file": "AAH_2", "start": 102, "end": 141, "duration": 39,
+      "title": "Aik hazaar euro ka packet — inkar",
+      "diary": "Ch4 P4",
+      "follow_up": "Us aadmi ne kaha tha ke tere jaisa banda yahan kabhi kamyab nahi ho sakta. Diary mein aik page hai jahan sirf aik haath packet ko wapas dhakel raha hai. Bas wahi aik page."
+    },
+
+    "father_mazhab_refusal": {
+      "file": "AAH_2", "start": 164, "end": 189, "duration": 25,
+      "title": "Mazhab kisi qeemat par nahi",
+      "diary": "Ch4",
+      "follow_up": "Unhein rishta aur karobar dono offer huay thay. Woh tafseel main share nahi karunga ke kaun log thay — ahem baat yeh hai ke unhon ne mana kar diya.",
+      "check": "Confirm on listening that 164s falls AFTER the group is named. If not, move start later."
+    },
+
+    "father_akele_chalenge": {
+      "file": "AAH_2", "start": 220, "end": 243, "duration": 23,
+      "title": "Akele chalenge to sab ko nazar aayenge",
+      "diary": "Ch3 P3",
+      "follow_up": "Diary mein aik page hai jahan aik qataar mein sab log bilkul aik jaise hain — sirf Abu ka silhouette pehchana jata hai. Yeh jumla aur woh page aik hi baat hain."
+    },
+
+    "father_departure": {
+      "file": "AAH_3", "start": 0, "end": 26, "duration": 26,
+      "title": "Darwazay wali tasveer",
+      "diary": "Ch1 P1–P3, P6",
+      "follow_up": "Ammi darwazay par khari thin. Woh kehte hain woh tasveer woh kabhi nahi bhool sakay. Meri diary ka pehla page usi darwazay se shuru hota hai."
+    },
+
+    "father_jab_tak_saans": {
+      "file": "AAH_3", "start": 81, "end": 122, "duration": 41,
+      "title": "Jab tak saans hai, tab tak aas hai",
+      "diary": "Ch3, Ch4 P7",
+      "follow_up": "Is recording ka aik hissa saaf nahi hai — taqreeban pachees second. Jo baat wahan thi woh mere paas nahi hai, aur main apni taraf se nahi bharunga."
+    },
+
+    "father_success_mirror": {
+      "file": "AAH_4", "start": 67, "end": 79, "duration": 12,
+      "title": "Sheeshe ke samne",
+      "diary": "Ch4 P8",
+      "follow_up": "Meri poori diary mein sirf aik page hai jahan kisi ka chehra saaf dikhta hai — woh page aik sheeshe ka hai. Yeh jumla us page ki wajah hai."
+    },
+
+    "father_usool": {
+      "file": "AAH_5", "start": 74, "end": 83, "duration": 9,
+      "title": "Usoolon par zindagi",
+      "diary": "Ch4 P6",
+      "follow_up": "Yeh unki nasihat hai aaj ki generation ke liye — paisay ke peechhe mat bhaago, usool banao."
+    },
+
+    "father_shoulders": {
+      "file": "AAH_6", "start": 20, "end": 40, "duration": 20,
+      "title": "Maa ki goad, baap ke kandhay",
+      "diary": "Ch5 P3, P4",
+      "priority": 1,
+      "follow_up": "Isi baat se is thesis ka naam bana — Moodiyan Ton Agge, kandhon se aagay. Maa goad mein uthati hai apni had tak dikhane ke liye. Baap kandhay par bithata hai apni had se aagay dikhane ke liye."
+    },
+
+    "father_tree": {
+      "file": "AAH_7", "start": 0, "end": 16, "duration": 16,
+      "title": "Khoon se seencha hua beej",
+      "diary": "Ch5 P6, P7",
+      "priority": 2,
+      "pair_with": "mother_pakki_fasal",
+      "follow_up": "Ab isi baat ka doosra sira suniye — Ammi ki recording se. Dono ne yeh alag alag record kiya tha, aik doosray ki baat sune baghair."
+    },
+
+    "mother_after_departure": {
+      "file": "MAMA_1", "start": 0, "end": 20, "duration": 20,
+      "title": "Zindagi do hisson mein",
+      "diary": "Ch2 P4",
+      "follow_up": "Diary mein aik poora page aisa hai jo beech se do hisson mein bata hua hai — oopar Abu, neeche Ammi, aik hi raat ke do alag kamre. Woh page banate waqt mujhe yeh recording nahi suni thi."
+    },
+
+    "mother_pardais_faasla": {
+      "file": "MAMA_1", "start": 20, "end": 32, "duration": 12,
+      "title": "Do dilon ke darmiyan faasla",
+      "diary": "Ch1 P3, Ch1 P8, Ch2 P5",
+      "priority": 1,
+      "follow_up": "Mere liye yeh Ammi ka sab se bhaari jumla hai. Pardais mulk ka faasla nahi tha — do dilon ka tha."
+    },
+
+    "mother_saaya_aur_mamta": {
+      "file": "MAMA_1", "start": 33, "end": 47, "duration": 14,
+      "title": "Baap ka saaya aur maa ki mamta",
+      "diary": "Ch2 P1, P8, Ch2 P3",
+      "priority": 2,
+      "follow_up": "Diary mein do page hain jahan maa-baap dono kinaron par khare aik saaya thaam rahe hain, aur bachay us ke neeche baithe hain — beparwah. Ammi kehti hain ke Abu ki ghair-maujoodgi mein woh saaya unhein khud banna parta tha."
+    },
+
+    "mother_qaanto_ki_saij": {
+      "file": "MAMA_1", "start": 79, "end": 120, "duration": 41,
+      "title": "Kaanton ki saij",
+      "diary": "Ch2 P3, P6",
+      "follow_up": "Ammi kehti hain ke hamdardi sab jatate hain, lekin jab waqai madad chahiye ho to sab haath peechay kheench lete hain."
+    },
+
+    "mother_running_the_home": {
+      "file": "MAMA_2", "start": 2, "end": 21, "duration": 19,
+      "title": "Roz ik jang",
+      "diary": "Ch2 P3",
+      "follow_up": "Har din aik naya mahaaz. Kuch apno se, kuch baygaano se. Ghar ki chaar dewaari hi unka maidan-e-jang thi."
+    },
+
+    "mother_help_and_obligation": {
+      "file": "MAMA_2", "start": 22, "end": 44, "duration": 22,
+      "title": "Ehsaan ka bojh",
+      "diary": "Ch2 P6",
+      "follow_up": "Muft mashwaray dene walay hazaar thay. Ammi kehti hain apno se liya hua ehsaan sab se bhaara bojh ban jata hai."
+    },
+
+    "mother_pakki_fasal": {
+      "file": "MAMA_2", "start": 72, "end": 87, "duration": 15,
+      "title": "Pakki pakai fasal",
+      "diary": "Ch5 P6, P7",
+      "priority": 3,
+      "pair_with": "father_tree",
+      "follow_up": "Abu ne beej lagane ki taraf se yeh baat ki thi — ke maa-baap usay khoon se seenchte hain. Ammi ne fasal ki taraf se ki — ke nayi nasal ko sirf tayyar fasal nazar aati hai. Dono ne alag baithe hue aik hi misaal istemal ki. Mujhe yeh baad mein pata chala."
+    },
+
+    "mother_lost_years": {
+      "file": "MAMA_2", "start": 99, "end": 147, "duration": 48,
+      "title": "Jo saal laut kar nahi aate",
+      "diary": "Ch2 P7",
+      "follow_up": "Diary mein aik family photo hai jis mein Abu ki jagah to hai lekin Abu taqreeban ghayab hain — bas halka sa nishan. Ammi kehti hain unhon ne bachon ke saath unke baap ko dekhne ka sukoon khoya."
+    },
+
+    "mother_hope": {
+      "file": "MAMA_2", "start": 148, "end": 169, "duration": 21,
+      "title": "Qurbani raaigan nahi jaati",
+      "diary": "Ch5 P7, P8",
+      "follow_up": "Ammi ki recording yahin khatam hoti hai — umeed par. Meri diary ka aakhri page bhi yahi karta hai."
+    }
+  },
+
+  "full_recordings": {
+    "full_father_1": { "file": "AAH_1", "start": null, "end": null, "title": "Poora safar — 2007 se Germany tak" },
+    "full_father_2": { "file": "AAH_2", "start": null, "end": null, "title": "Kaam, halal rozi aur packet" },
+    "full_father_3": { "file": "AAH_3", "start": null, "end": null, "title": "Ghar chhorna" },
+    "full_father_4": { "file": "AAH_4", "start": null, "end": null, "title": "Kamyabi kya hai" },
+    "full_father_5": { "file": "AAH_5", "start": null, "end": null, "title": "Nayi nasal ke naam" },
+    "full_father_6": { "file": "AAH_6", "start": null, "end": null, "title": "Goad aur kandhay" },
+    "full_father_7": { "file": "AAH_7", "start": null, "end": null, "title": "Khoon se seencha hua beej" },
+    "full_mother_1": { "file": "MAMA_1", "start": null, "end": null, "title": "Zindagi do hisson mein" },
+    "full_mother_2": { "file": "MAMA_2", "start": null, "end": null, "title": "Paalna, kho dena, umeed" }
+  },
+
+  "sequences": {
+    "the_convergence": {
+      "clips": ["father_tree", "mother_pakki_fasal"],
+      "title": "Beej aur fasal — dono taraf se",
+      "intro": "Yeh dono alag alag record ki gayi thin. Kisi ne doosray ki baat nahi suni thi. Pehle Abu, phir Ammi.",
+      "follow_up": "Aik hi misaal — khoon se seenchna — dono ki zabaan par. Abu beej lagane ki taraf se, Ammi fasal ki taraf se. Jab maine yeh notice kiya to mujhe laga ke meri thesis ka jawab mere paas pehle se maujood tha. Bas main sun nahi raha tha.",
+      "total_duration": 31
+    }
+  }
+}

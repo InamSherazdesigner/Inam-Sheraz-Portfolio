@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Inam Sheraz — Graphic Designer &amp; Illustrator</title>
+<meta name="description" content="Portfolio of Inam Sheraz, graphic designer and illustrator based in Lahore. Thesis work, brand identity, motion graphics, illustration and editorial design.">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Fraunces:opsz,wght@9..144,400;9..144,600&display=swap">
+
+<link rel="stylesheet" href="css/tokens.css">
+<link rel="stylesheet" href="css/console.css">
+<link rel="stylesheet" href="css/lcd.css">
+<link rel="stylesheet" href="css/stage.css">
+</head>
+<body>
+
+<main class="room">
+
+  <div class="console">
+
+    <div class="console__lip"></div>
+
+    <div class="console__bezel">
+      <!-- Lamp only. Always lit. There is no power button. -->
+      <span class="console__lamp"></span>
+      <span class="console__lamp-label">POWER</span>
+
+      <div class="lcd" id="lcd" data-power="on">
+        <div class="off">PRESS START</div>
+        <div class="lcd__screen" id="screen" role="application"
+             aria-label="Console screen. Use arrow keys to move, A or Enter to open, B or Escape to go back."></div>
+      </div>
+    </div>
+
+    <div class="console__controls">
+
+      <div class="start">
+        <button class="start__btn" data-key="start" aria-label="Start — turn the console on or off"></button>
+        <span class="start__label">START</span>
+      </div>
+
+      <div class="dpad">
+        <div class="dpad__plate"></div>
+        <button class="dpad__key" data-key="up"    aria-label="Up"></button>
+        <button class="dpad__key" data-key="down"  aria-label="Down"></button>
+        <button class="dpad__key" data-key="left"  aria-label="Left"></button>
+        <button class="dpad__key" data-key="right" aria-label="Right"></button>
+        <div class="dpad__hub"></div>
+      </div>
+
+      <div class="face">
+        <button class="face__btn" data-key="a" aria-label="A — open"></button>
+        <button class="face__btn" data-key="b" aria-label="B — back"></button>
+        <span class="face__label" data-for="a">A</span>
+        <span class="face__label" data-for="b">B</span>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- The escape hatch. Outside the console, always visible, no controls to
+       learn. BUILD_SPEC §5 — this is how a hiring manager with thirty seconds
+       gets to the work. -->
+  <a class="hatch" href="everything.html">
+    VIEW EVERYTHING AS ONE PAGE <span class="hatch__arrow" aria-hidden="true">→</span>
+  </a>
+
+</main>
+
+<!-- The full-resolution view. Empty until a project is opened. -->
+<div class="stage" id="stage" hidden></div>
+
+<script type="module" src="js/console.js"></script>
+</body>
+</html>

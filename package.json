@@ -1,0 +1,34 @@
+{
+  "name": "inam-sheraz-portfolio",
+  "version": "2.0.0",
+  "private": true,
+  "description": "Portfolio of Inam Sheraz — a handheld console that frames the work. Next.js frontend, Express/MongoDB backend.",
+  "license": "UNLICENSED",
+  "engines": {
+    "node": ">=20.11.0"
+  },
+  "workspaces": [
+    "frontend",
+    "backend"
+  ],
+  "scripts": {
+    "dev": "concurrently -n backend,frontend -c magenta,cyan \"npm:dev:backend\" \"npm:dev:frontend\"",
+    "dev:frontend": "npm run dev --workspace frontend",
+    "dev:backend": "npm run dev --workspace backend",
+    "build": "npm run build --workspace frontend",
+    "start:frontend": "npm run start --workspace frontend",
+    "start:backend": "npm run start --workspace backend",
+    "lint": "npm run lint --workspaces --if-present",
+    "typecheck": "npm run typecheck --workspaces --if-present",
+    "test": "npm run test --workspaces --if-present",
+    "test:e2e": "npm run test:e2e --workspace frontend",
+    "format": "prettier --check .",
+    "format:write": "prettier --write .",
+    "seed": "npm run seed --workspace backend",
+    "verify": "npm run format && npm run lint && npm run typecheck && npm run test && npm run build"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2",
+    "prettier": "^3.4.2"
+  }
+}

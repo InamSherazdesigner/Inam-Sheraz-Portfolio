@@ -1,0 +1,226 @@
+/* ==========================================================================
+   TOKENS — Inam Sheraz portfolio
+
+   Palette is locked by BUILD_SPEC.md §3. Do not introduce new colours.
+   One accent only.
+
+   Ported verbatim from the original build. The only change is the type stack,
+   which now resolves through the CSS variables next/font generates — the faces
+   are self-hosted rather than fetched from a Google CDN, which removes a
+   render-blocking third-party request and a privacy leak while producing the
+   identical typography.
+   ========================================================================== */
+
+:root {
+  /* --- The locked palette ------------------------------------------------ */
+  --room: #0b0b0c; /* page ground, around the console */
+  --body-1: #2a2b2e; /* console shell, light edge */
+  --body-2: #1c1d20; /* console shell */
+  --body-3: #121315; /* console shell, shadow edge */
+  --bezel: #0a0a0b; /* screen surround */
+  --amber: #e8a13c; /* THE LCD FIELD — the screen is amber */
+  --ink: #17120a; /* pixels and type ON the amber screen */
+  --accent: #c7401f; /* vermilion — selection, action, links */
+  --lamp: #4fa06b; /* power LED only */
+
+  /* The same vermilion, darker. Not a tenth hue — one shade of the one accent.
+     #C7401F measures 2.29:1 on the amber field, so as small type it fails WCAG
+     AA by a wide margin; an axe scan flagged 35 elements. This shade is used
+     ONLY where the accent is small text sitting on a ground.
+
+     Measured against every ground it actually lands on. The panel column is
+     what pushed it past #7A2412: notes and the voice widget sit on --ink-08,
+     which darkens the amber underneath them to #D79638, and a value chosen
+     against pure amber alone failed there.
+
+                       amber   panel   LIMINAL   LIMINAL panel
+       #681E0E         5.39    4.67    11.00     9.89     ✓ all
+       #7A2412         4.59    3.98     9.38     8.43     ✗ panel
+
+     Everywhere the accent is a fill, a border, a focus ring, or a bar carrying
+     amber text, --accent itself is unchanged — those pass on their own, and
+     the vermilion selection bar is the signature of the whole interface.
+     See ADR 0007. */
+  --accent-ink: #681e0e;
+
+  /* Text ON the vermilion fill. Amber on vermilion measures 2.29:1 — the same
+     failing pair as above, inverted — and that pair carries the selected row,
+     the A-prompt, the skip link and every button hover. Near-white takes it to
+     4.99:1. The fill itself is untouched: only what sits on top changes, and a
+     real brick-game LCD inverts a selected row to the lightest value it has. */
+  --on-accent: #ffffff;
+
+  /* --- Derived, not new colours ------------------------------------------
+     Every value below is one of the nine above at an alpha, so the palette
+     stays closed. Nothing here introduces a tenth hue.
+
+     CONTRAST NOTE. The original build set the secondary ink at 0.60 alpha,
+     which lands at 3.62:1 on the amber field — below the 4.5:1 that WCAG AA
+     asks of body text, and an axe scan flagged it on 83 elements. Raising the
+     alpha to 0.75 takes it to 5.2:1 without touching the palette: it is still
+     --ink, just less of the ground showing through. Same for the amber and
+     white alphas below. Measured, not guessed. See docs/07-qa.md.            */
+  --ink-75: rgb(23 18 10 / 0.75); /* 5.2:1 on amber */
+  --ink-38: rgb(23 18 10 / 0.38);
+  --ink-16: rgb(23 18 10 / 0.16);
+  --ink-08: rgb(23 18 10 / 0.08);
+  --amber-lift: rgb(255 255 255 / 0.16); /* LCD glass highlight */
+  --shell-lift: rgb(255 255 255 / 0.05); /* moulded plastic edge */
+  --shell-cut: rgb(0 0 0 / 0.55); /* moulded plastic shadow */
+  --grid-line: rgb(23 18 10 / 0.027);
+
+  /* The mat the artwork sits on in the full view. Neutral by design: the
+     amber ground never touches the work. See BUILD_SPEC §7. */
+  --mat: #f2ebdd;
+  --mat-edge: rgb(23 18 10 / 0.14);
+
+  /* Per-project ground. Overridden per project — LIMINAL goes near-white
+     because its own stated rule is black and white. */
+  --ground: var(--amber);
+
+  /* --- Type -------------------------------------------------------------- */
+  /* --font-mono and --font-serif are injected by next/font in layout.tsx. */
+  --mono:
+    var(--font-mono), ui-monospace, 'SF Mono', 'Cascadia Mono', 'Roboto Mono', Menlo, Consolas,
+    monospace;
+  --serif: var(--font-serif), 'Iowan Old Style', 'Palatino Linotype', Palatino, Georgia, serif;
+
+  /* Interface scale. Small and dense — this is a device, not a document. */
+  --t-micro: 0.5625rem; /*  9px — LCD footer hints, counters */
+  --t-lcd: 0.625rem; /* 10px — LCD list rows, card body */
+  --t-small: 0.75rem; /* 12px — console furniture, captions */
+  --t-base: 0.9375rem; /* 15px — full-view body */
+  --t-lede: 1.125rem; /* 18px — full-view opening line */
+
+  /* Reading measure for the long PAGE copy. */
+  --measure: 34rem;
+
+  /* --- The object -------------------------------------------------------- */
+  --console-w: 340px; /* locked by BUILD_SPEC §12 */
+  --bezel-w: 287px;
+  --bezel-h: 252px;
+  --lcd-w: 204px;
+  --lcd-h: 197px;
+  --lcd-px: 3px; /* one LCD "pixel" — drives the grid texture */
+
+  /* --- Motion -----------------------------------------------------------
+     One axis only: low resolution -> full resolution. Nothing contradicts it. */
+  --ease-step: steps(4, end); /* resolution gains happen in steps */
+  --ease-out: cubic-bezier(0.22, 0.61, 0.36, 1);
+  --dur-tick: 90ms; /* a single list move */
+  --dur-load: 1400ms; /* the tetris fill, full ceremony */
+  --dur-clear: 220ms; /* retained loading-state timing */
+  --dur-res: 520ms; /* chunky -> sharp */
+}
+
+/* Reduced motion cuts instantly, with no animation. BUILD_SPEC §7. */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --dur-tick: 0ms;
+    --dur-load: 0ms;
+    --dur-clear: 0ms;
+    --dur-res: 0ms;
+  }
+}
+
+/* ==========================================================================
+   RESET
+   ========================================================================== */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--room);
+  color: var(--amber);
+  font-family: var(--mono);
+  font-size: var(--t-base);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+img,
+video {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+/* [hidden] must win over any author `display`. Without this, a grid or flex
+   container stays visible while marked hidden — which would have shown the
+   images behind the Khushi Ya Majboori content note, and the CAT set behind
+   its password, to everyone. */
+[hidden] {
+  display: none !important;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+}
+
+ul,
+ol {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+/* Links only ever sit on a light ground — the console's own links (.hatch,
+   .crash, .stage__back) all set their own colour. So the default is the
+   AA-safe shade: bright vermilion on amber would be 2.29:1, and the contact
+   links become real anchors the moment their details are filled in. */
+a {
+  color: var(--accent-ink);
+}
+
+/* Visible keyboard focus everywhere. Never removed, only restyled. */
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* Available to screen readers, invisible on screen. */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* Skip link — first thing in the tab order, invisible until focused. The
+   console is an application widget, so a keyboard visitor needs a documented
+   way past it. */
+.skip {
+  position: absolute;
+  left: 0.75rem;
+  top: -3rem;
+  z-index: 1000;
+  padding: 0.6rem 1rem;
+  background: var(--accent);
+  color: var(--on-accent);
+  font-size: var(--t-small);
+  letter-spacing: 0.12em;
+  text-decoration: none;
+  transition: top 120ms var(--ease-out);
+}
+.skip:focus {
+  top: 0.75rem;
+}
