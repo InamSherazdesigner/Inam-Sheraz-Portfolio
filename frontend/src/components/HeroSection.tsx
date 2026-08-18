@@ -210,39 +210,41 @@ export default function HeroSection() {
     return () => window.removeEventListener('resize', updateScale);
   }, []);
 
-  // Clean up legacy localStorage and load v12 if present
+  // Load from localStorage if present
   useEffect(() => {
     try {
-      const legacyKeys = [
+      const keys = [
+        'hero_custom_layout_v12_prod',
         'hero_custom_layout_final_v10',
         'hero_custom_layout_final_v9',
         'hero_custom_layout_final_v8',
         'hero_custom_layout_final_v7',
       ];
-      legacyKeys.forEach((k) => localStorage.removeItem(k));
-
-      const saved = localStorage.getItem('hero_custom_layout_v12_prod');
-      if (saved) {
-        const parsed = JSON.parse(saved);
-        const sanitized: Record<string, ItemConfig> = {};
-        Object.entries(parsed).forEach(([pk, pv]) => {
-          if (pk === 'portfolioHeading') return;
-          const item = pv as ItemConfig;
-          sanitized[pk] = {
-            ...item,
-            name: stripEmojis(item.name),
-            text: item.text ? stripEmojis(item.text) : undefined,
-            rotation: pk === 'cat_zubair' ? 0 : item.rotation,
-          };
-        });
-        if (sanitized.character) {
-          sanitized.character.src = '/hero/Inam_transparent_idle_loop.webm';
+      for (const k of keys) {
+        const saved = localStorage.getItem(k);
+        if (saved) {
+          const parsed = JSON.parse(saved);
+          const sanitized: Record<string, ItemConfig> = {};
+          Object.entries(parsed).forEach(([pk, pv]) => {
+            if (pk === 'portfolioHeading') return;
+            const item = pv as ItemConfig;
+            sanitized[pk] = {
+              ...item,
+              name: stripEmojis(item.name),
+              text: item.text ? stripEmojis(item.text) : undefined,
+              rotation: pk === 'cat_zubair' ? 0 : item.rotation,
+            };
+          });
+          if (sanitized.character) {
+            sanitized.character.src = '/hero/Inam_transparent_idle_loop.webm';
+          }
+          if (sanitized.cat_zubair) {
+            sanitized.cat_zubair.rotation = 0;
+          }
+          delete sanitized.portfolioHeading;
+          setLayout(sanitized);
+          break;
         }
-        if (sanitized.cat_zubair) {
-          sanitized.cat_zubair.rotation = 0;
-        }
-        delete sanitized.portfolioHeading;
-        setLayout(sanitized);
       }
     } catch {
       // Ignore
