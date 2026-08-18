@@ -90,10 +90,9 @@ const nextConfig = {
   poweredByHeader: false,
   compress: true,
 
-  // Emits .next/standalone — a self-contained server carrying only the files
-  // it actually reaches, which is a fraction of node_modules. Used by
-  // frontend/Dockerfile; harmless for `next start` and for a static host.
-  output: 'standalone',
+  // Emits .next/standalone only when building for Docker container.
+  // Harmless for `next start` and native Vercel deployments.
+  ...(process.env.DOCKER_BUILD ? { output: 'standalone' } : {}),
 
   images: {
     // The artwork was already compressed to .webp by hand before this build
