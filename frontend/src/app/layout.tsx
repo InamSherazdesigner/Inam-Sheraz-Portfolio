@@ -39,7 +39,18 @@ const serif = Fraunces({
   display: 'swap',
 });
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000';
+const getSiteUrl = () => {
+  const envUrl = process.env.NEXT_PUBLIC_SITE_URL?.trim();
+  if (envUrl && envUrl.length > 0) {
+    return envUrl.startsWith('http') ? envUrl : `https://${envUrl}`;
+  }
+  if (process.env.VERCEL_URL?.trim()) {
+    return `https://${process.env.VERCEL_URL.trim()}`;
+  }
+  return 'https://inamsheraz.vercel.app';
+};
+
+const SITE_URL = getSiteUrl();
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
