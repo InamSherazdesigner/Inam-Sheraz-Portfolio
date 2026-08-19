@@ -10,6 +10,7 @@ interface ContactRequestBody {
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 const RECEIVER_EMAIL = process.env.CONTACT_RECEIVER_EMAIL || 'inamsherazdesigner@gmail.com';
+const WEB3FORMS_KEY = process.env.WEB3FORMS_KEY || '6bf3ef88-c539-4b58-86ea-9d5a74087ee6';
 
 async function dispatchEmail(input: {
   name: string;
@@ -43,6 +44,8 @@ Sent via Inam Sheraz Portfolio (https://inam-sheraz-portfolio.vercel.app)`;
   <p style="font-size: 12px; color: #888888; margin-top: 20px;">Reply directly to this email to answer ${input.name} (${input.email}).</p>
 </div>`;
 
+  let sent = false;
+
   // 1. Try Resend API if configured
   const resendKey = process.env.RESEND_API_KEY;
   if (resendKey) {
@@ -65,19 +68,47 @@ Sent via Inam Sheraz Portfolio (https://inam-sheraz-portfolio.vercel.app)`;
 
       if (res.ok) {
         console.log(`[Contact API] Email dispatched via Resend to ${RECEIVER_EMAIL}`);
-        return true;
-      } else {
-        const errText = await res.text();
-        console.error('[Contact API] Resend error:', errText);
+        sent = true;
       }
     } catch (err) {
-      console.error('[Contact API] Resend network failure:', err);
+      console.error('[Contact API] Resend failure:', err);
     }
   }
 
-  // 2. Try Web3Forms API if configured
-  const web3FormsKey = process.env.WEB3FORMS_KEY;
-  if (web3FormsKey) {
+  // 2. Try FormSubmit API (Reliable serverless webhook)
+  if (!sent) {
+    try {
+      const res = await fetch(`https://formsubmit.co/ajax/${RECEIVER_EMAIL}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Accept: 'application/json',
+          Origin: 'https://inam-sheraz-portfolio.vercel.app',
+          Referer: 'https://inam-sheraz-portfolio.vercel.app/',
+        },
+        body: JSON.stringify({
+          name: input.name,
+          email: input.email,
+          _subject: subjectLine,
+          message: input.body,
+          _template: 'table',
+        }),
+      });
+
+      if (res.ok) {
+        const json = await res.json().catch(() => ({}));
+        if (json.success !== 'false') {
+          console.log(`[Contact API] Email dispatched via FormSubmit to ${RECEIVER_EMAIL}`);
+          sent = true;
+        }
+      }
+    } catch (err) {
+      console.error('[Contact API] FormSubmit failure:', err);
+    }
+  }
+
+  // 3. Try Web3Forms API
+  if (!sent && WEB3FORMS_KEY) {
     try {
       const res = await fetch('https://api.web3forms.com/submit', {
         method: 'POST',
@@ -86,7 +117,7 @@ Sent via Inam Sheraz Portfolio (https://inam-sheraz-portfolio.vercel.app)`;
           Accept: 'application/json',
         },
         body: JSON.stringify({
-          access_key: web3FormsKey,
+          access_key: WEB3FORMS_KEY,
           name: input.name,
           email: input.email,
           subject: subjectLine,
@@ -97,17 +128,17 @@ Sent via Inam Sheraz Portfolio (https://inam-sheraz-portfolio.vercel.app)`;
 
       if (res.ok) {
         console.log(`[Contact API] Email dispatched via Web3Forms to ${RECEIVER_EMAIL}`);
-        return true;
+        sent = true;
       }
     } catch (err) {
       console.error('[Contact API] Web3Forms failure:', err);
     }
   }
 
-  // 3. Try Nodemailer / SMTP if configured
+  // 4. Try Nodemailer / SMTP if configured
   const smtpUser = process.env.SMTP_USER;
   const smtpPass = process.env.SMTP_PASS;
-  if (smtpUser && smtpPass) {
+  if (!sent && smtpUser && smtpPass) {
     try {
       const nodemailer = await import('nodemailer');
       const transporter = nodemailer.createTransport({
@@ -128,14 +159,14 @@ Sent via Inam Sheraz Portfolio (https://inam-sheraz-portfolio.vercel.app)`;
       });
 
       console.log(`[Contact API] Email dispatched via Gmail SMTP to ${RECEIVER_EMAIL}`);
-      return true;
+      sent = true;
     } catch (err) {
       console.error('[Contact API] SMTP failure:', err);
     }
   }
 
-  console.log(`[Contact API] Message recorded in logs. Sender: ${input.name} <${input.email}>. Body length: ${input.body.length}`);
-  return false;
+  console.log(`[Contact API] Message recorded for ${RECEIVER_EMAIL} from ${input.name} <${input.email}> (Dispatched: ${sent})`);
+  return sent;
 }
 
 export async function POST(request: Request) {

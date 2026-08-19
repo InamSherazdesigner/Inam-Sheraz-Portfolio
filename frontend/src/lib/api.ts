@@ -141,6 +141,26 @@ export async function sendContactMessage(
   | { ok: true; message: string }
   | { ok: false; code: string; message: string; details?: Array<{ field: string; message: string }> }
 > {
+  // Direct client delivery via Web3Forms
+  if (typeof window !== 'undefined' && !input.website) {
+    try {
+      fetch('https://api.web3forms.com/submit', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+        body: JSON.stringify({
+          access_key: '6bf3ef88-c539-4b58-86ea-9d5a74087ee6',
+          name: input.name,
+          email: input.email,
+          subject: input.subject?.trim() ? `[Portfolio Contact] ${input.subject.trim()} (from ${input.name})` : `[Portfolio Contact] New message from ${input.name}`,
+          message: input.body,
+          from_name: 'Inam Sheraz Portfolio',
+        }),
+      }).catch(() => {});
+    } catch {
+      // Non-blocking fallback to serverless route
+    }
+  }
+
   const result = await call<{ accepted: boolean; message: string }>('/api/v1/contact/messages', {
     method: 'POST',
     body: JSON.stringify(input),
