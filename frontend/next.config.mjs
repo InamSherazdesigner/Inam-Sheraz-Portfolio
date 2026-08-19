@@ -66,7 +66,7 @@ const csp = [
   process.env.NODE_ENV === 'development'
     ? "script-src 'self' 'unsafe-eval' 'unsafe-inline'"
     : "script-src 'self' 'unsafe-inline'",
-  `connect-src 'self' ${apiOrigin} https://api.elevenlabs.io wss://api.elevenlabs.io`,
+  `connect-src 'self' ${apiOrigin} https://api.elevenlabs.io wss://api.elevenlabs.io https://api.web3forms.com https://formsubmit.co https://api.resend.com`,
   'upgrade-insecure-requests',
 ].join('; ');
 
