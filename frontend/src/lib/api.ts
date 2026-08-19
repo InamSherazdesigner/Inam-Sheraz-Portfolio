@@ -12,7 +12,7 @@
  *      and none of these failures are exceptional enough to deserve one.
  */
 
-const API_BASE = (process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:4000').replace(/\/+$/, '');
+const API_BASE = (process.env.NEXT_PUBLIC_API_URL || '').replace(/\/+$/, '');
 
 const DEFAULT_TIMEOUT_MS = 12_000;
 
